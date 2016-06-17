@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<ProfilingTarget xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ProjectTarget>
+    <TargetProject>db7c1ea1-5c12-40c3-8bc9-06dbf53ca1d1</TargetProject>
+    <FriendlyName>FlaskWebProject1</FriendlyName>
+  </ProjectTarget>
+  <Reports>
+    <Report>
+      <Filename>C:\Users\Stefan Blattmann\AppData\Local\Temp\FlaskWebProject1_20160610.vsp</Filename>
+    </Report>
+  </Reports>
+</ProfilingTarget>

@@ -1,0 +1,11 @@
+{
+	"name" : "%s",
+	"date" : "%s",
+	"numOfPlaces" : "%l",
+	"places" : ["%s"],
+	"image" : "%s"
+}
+
+
+// name = alch.StringField()
+// places = alch.DocumentField(Place)
