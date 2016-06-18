@@ -1,7 +1,5 @@
-06/18/2016 01:14:22 PM !!! First Log !!!
-06/18/2016 01:14:23 PM  * Running on http://localhost:50135/ (Press CTRL+C to quit)
-06/18/2016 01:14:23 PM 127.0.0.1 - - [18/Jun/2016 13:14:23] "GET / HTTP/1.1" 200 -
-06/18/2016 01:14:24 PM 127.0.0.1 - - [18/Jun/2016 13:14:24] "GET /favicon.ico HTTP/1.1" 404 -
-06/18/2016 01:14:24 PM 127.0.0.1 - - [18/Jun/2016 13:14:24] "GET /favicon.ico HTTP/1.1" 404 -
-06/18/2016 01:14:32 PM get /getPlace/<placename> 
-06/18/2016 01:14:32 PM 127.0.0.1 - - [18/Jun/2016 13:14:32] "GET /getPlace/0815 HTTP/1.1" 200 -
+06/18/2016 01:25:54 PM !!! First Log !!!
+06/18/2016 01:25:55 PM  * Running on http://localhost:55717/ (Press CTRL+C to quit)
+06/18/2016 01:25:56 PM 127.0.0.1 - - [18/Jun/2016 13:25:56] "GET / HTTP/1.1" 200 -
+06/18/2016 01:25:56 PM 127.0.0.1 - - [18/Jun/2016 13:25:56] "GET /favicon.ico HTTP/1.1" 404 -
+06/18/2016 01:25:56 PM 127.0.0.1 - - [18/Jun/2016 13:25:56] "GET /favicon.ico HTTP/1.1" 404 -

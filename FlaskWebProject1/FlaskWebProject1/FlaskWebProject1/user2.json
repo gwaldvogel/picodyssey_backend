@@ -1,8 +1,7 @@
 {
 	"userId" : "4711",
 	"name" : "Hosrt",
-	"date" : "128",
-	"numOfPlaces" : "1",
+	"numberOfPlaces" : "1",
 	"places" : ["0815"],
 	"type" : "user"
 }

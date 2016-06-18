@@ -164,52 +164,32 @@ get existing user from mongodb query for uuid
 @app.route('/getUser/<username>')
 def getUserProfile(username):
     logging.debug("get /getUser/<username>")
-    user = collectionUsers.find_one_or_404({'uuid': username})
+    user = collectionUsers.find_one_or_404({'userId': username})
     user.pop("_id")
-    return flask.jsonify(**user)
-    
-
-"""
-add new user to mongodb get uuid
-"""
-@app.route('/newUser', methods=['GET', 'POST'])
-def addUserProfile(username):
-    content = request.get_json(silent=True)
-    print(content)
-    logging.debug("get /newUser/<username>")
-    mongo.db.users.insert_one(content)
-    
-"""
-add new user to mongodb get uuid
-"""
-@app.route('/addPlace/<uuuid_user>', methods=['GET', 'POST'])
-def addPlace(username):
-    content = request.get_json(silent=True)
-    print(content)
-    logging.debug("get /newUser/<username>")
-    mongo.db.users.insert_one(content)    
-
+    return jsonify(**user)
+   
 """
 get place by uuid 
 """
-@app.route('/getPlace/<placename>')
-def getPlaceByUuid(placename):
+@app.route('/getPlace/<uuid_place>')
+def getPlaceByUuid(uuid_place):
     logging.debug("get /getPlace/<placename> ")
-    place = collectionPlaces.find_one_or_404({'placeId': placename})
+    place = collectionPlaces.find_one_or_404({'placeId': uuid_place})
     place.pop("_id")
     return jsonify(**place)
-    
-    
+      
 """
 get random place from mongodb ignore user places  
 """
 @app.route('/getRandPlace')
 def getRandPlace():
+    places = collectionPlaces.find({'type': "place"})
     logging.debug("get /getRandPlace ")
-    container = mongo.db.places.find({"type": "place"})
+    randPlaceIDs = random.randint(0,len(containerPlaces))
+    retPlaces = places(randPlaceIDs)
+    retPlaces.pop("_id")
+    return jsonify(**retPlaces)
     
-
-
 """
 get random place from mongodb ignore user places  
 """
@@ -222,7 +202,45 @@ def get3RandPlace():
     for i in range(0,3):
         randPlaceIDs = random.randint(0,len(containerPlaces))
         retList.append(containerPlaces(randPlaceIDs))
-    return Flask.jsonify(**retList)
+    return jsonify(**retList) 
+
+"""
+get random place from mongodb ignore user places  
+"""
+@app.route('/getUserPlaces/<userId>')
+def get3RandPlace(userId):
+    logging.debug("get /getUserPlaces/ ")
+    containerPlaces = mongo.db.places.find({'type': "place"})
+    retList = []
+    i = 0
+    for i in range(0,3):
+        randPlaceIDs = random.randint(0,len(containerPlaces))
+        retList.append(containerPlaces(randPlaceIDs))
+    return jsonify(**retList)
+
+"""
+add new user to mongodb get uuid
+"""
+@app.route('/addUser', methods=['GET', 'POST'])
+def addUserProfile():
+    content = request.get_json(silent=True)
+    print(content)
+    logging.debug("get /newUser/<username>")
+    collectionUsers.insert(content)
+    
+"""
+add new user to mongodb get uuid
+"""
+@app.route('/addPlace/<uuid_user>', methods=['GET', 'POST'])
+def addPlace(username):
+    content = request.get_json(silent=True)
+    print(content)
+    logging.debug("get /newUser/<username>")
+    collectionPlaces.insert(content)    
+
+
+
+
 
 
 def allowed_file(filename):
