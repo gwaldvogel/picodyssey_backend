@@ -130,7 +130,7 @@ default sites for mongodb
 def home():
     """Renders the home page.""" 
     #test script for read ref json format
-    
+    """
     collect = db.collection_names(include_system_collections=False)
     Data = json.loads(open("C://git//hackathon216//picodyssey_backend//FlaskWebProject1//FlaskWebProject1//FlaskWebProject1//place.json").read())
     print (json.dumps(Data,indent=4, sort_keys=True))
@@ -149,7 +149,7 @@ def home():
 
     collectionUsers.insert(incommingUser)
     collectionPlaces.insert(incommingData)
-    
+    """
     return render_template('Hello.html')
 
 """
