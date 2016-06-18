@@ -3,7 +3,7 @@ The flask application package.
 """
 
 from flask import Flask
-from flask_pymongo import PyMongo
+from flask_pymongo import PyMongo,MongoClient
 
 import platform
 
@@ -39,7 +39,13 @@ app.config['MONGOALCHEMY_DATABASE'] = 'test'
 """
 start db connector
 """
-mongo = PyMongo(app)
+client = MongoClient()
+db = client.test
 
-import FlaskWebProject1.views
+collectionUsers = db.users
+collectionPlaces = db.places
+
+
 import FlaskWebProject1.dbHelper
+import FlaskWebProject1.views
+

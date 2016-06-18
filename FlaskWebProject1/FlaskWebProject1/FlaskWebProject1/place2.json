@@ -1,0 +1,15 @@
+{
+   "placeId" : "0815",
+   "userId" : "4711",
+   "date": "205",
+   "name": "Rathaus",
+   "geoN": ["20"],
+   "geoE": ["40"],
+   "image": "hello.jpg",
+   "thumbnail": "hello_thumbnail.jpg",
+   "rate": "4.5",
+   "numOfRates": "20",
+   "description": "Rathaus freiburg",
+   "city": "Freiburg",
+   "type" : "place"
+}   

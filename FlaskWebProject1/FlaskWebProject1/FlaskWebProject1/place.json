@@ -1,34 +1,15 @@
 {
-   "user_id" : "%s",
-   "name": "%s",
-   "date": "%s",
-   "x": "%s",
-   "y": "%s",
-   "z": "%s",
-   "GeoN": ["%s","%s","%s"],
-   "GeoO": ["%s","%s","%s"],
-   "image": "%s",
-   "thumbnail": "%s",
-   "rate": "%l",
-   "numOfRates": "%l", 
-   "description": "%s",
-   "city": "%s",
-   "precinct": "%s",
-   "type" : "%s"   
+   "placeId" : "string",
+   "userId" : "string",
+   "date": "int",
+   "name": "string",
+   "geoN": ["long"],
+   "geoE": ["long"],
+   "image": "string",
+   "thumbnail": "string",
+   "rate": "float",
+   "numOfRates": "int",
+   "description": "string",
+   "city": "string",
+   "type" : "place"
 }   
-
-
-    // name = alch.StringField()
-    // #date = alch.DateField()
-    // x = alch.LongField()
-    // y = alch.LongField()
-    // z = alch.LongField()
-    // GeoN = alch.StringField()
-    // GeoO = alch.StringField()
-    // image = alch.StringField()
-    // thumbnail = alch.StringField()
-    // rate = alch.LongField()
-    // numOfRates = alch.LongField()
-    // description = alch.StringField()
-    // city = alch.StringField()
-    // precinct = alch.StringField()

@@ -8,10 +8,7 @@ imports function
 """
 import json 
 
-"""
-project imports
-"""
-from FlaskWebProject1 import app,mongo
+
 
 """
 some helper functions
@@ -49,6 +46,7 @@ some helper functions
 #        #logging.warning('getResponsiveDataType: can not decode input value')  
 #        return 0
 
+
 def convertDataType(value,refValue):
     if value == "place" or value =="user":
         return str(value)
@@ -67,7 +65,7 @@ def convertDataType(value,refValue):
     if refValue == "date":
         return str(value)
     else:
-        logging.warning('convertDataType: can not decode input value')  
+#        logging.warning('convertDataType: can not decode input value')  
         return 0
 
 def recReadJsonList(valueList,refList):
@@ -87,7 +85,7 @@ def readIncommingJson(file,refFile):
             if file[keys] == list:
                 recReadJsonList(file[keys],refFile[keys])
             retDict[keys] = convertDataType(file[keys],refFile[keys])
-        logging.info('readIncommingJson: decoce user json')
+#        logging.info('readIncommingJson: decoce user json')
         return retDict
           
     if (file["type"] == "place") & (refFile["type"] == "place"):
@@ -97,25 +95,18 @@ def readIncommingJson(file,refFile):
                 tmpList = refFile[keys]
                 retDict[keys] = recReadJsonList(file[keys],tmpList)
             retDict[keys] = convertDataType(file[keys],refFile[keys])
-        logging.info('readIncommingJson: decoce place json')
+#        logging.info('readIncommingJson: decoce place json')
         return retDict
         
     else:
-        logging.warning('readIncommingJson: can not decode input json file')  
+#        logging.warning('readIncommingJson: can not decode input json file')  
         return -1       
 
 
 
-#test script for read ref json format
-#Data = json.loads(open("C:\mongodb\place.json").read())
-#print (json.dumps(Data,indent=4, sort_keys=True))
-#realData = json.loads(open("C:\mongodb\place2.json").read())    
-#print (json.dumps(realData,indent=4, sort_keys=True))
-#
-#incommingData = readIncommingJson(realData,Data)
 
 
-
+"""
 class user():
     def __init__(self,refJson,inComeData):
         self._userRefJson = refJson
@@ -191,3 +182,4 @@ class place():
         except:
             failure = True
         return failure
+"""
