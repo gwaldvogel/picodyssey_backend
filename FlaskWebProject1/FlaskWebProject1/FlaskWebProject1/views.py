@@ -10,12 +10,13 @@ import logging
 import random
 import numpy as np
 import json 
+import cv2
 
 """
 project imports
 """
 from FlaskWebProject1 import app,collectionUsers,collectionPlaces,db
-from FlaskWebProject1 import dbHelper
+#from FlaskWebProject1 import dbHelper
 
 
 """
@@ -102,6 +103,24 @@ def readIncommingJson(file,refFile):
 #        logging.warning('readIncommingJson: can not decode input json file')  
         return -1   
 
+
+"""
+thumbnail creation
+"""
+
+
+def resizeImage(placeId,filename):
+	image = cv2.imread(str(filename))
+	#calc the ratio
+	r = 250.0 / image.shape[1]
+	dim = (250, int(image.shape[0] * r))
+	 
+	# perform the actual resizing of the image
+	resized = cv2.resize(image, dim, interpolation = cv2.INTER_AREA)
+	
+	cv2.imwrite(str(placeId)+"_thumbnail.jpg", resized)
+
+
 """
 default sites for mongodb
 """
@@ -181,8 +200,8 @@ def getPlaceByUuid(uuid_place):
 """
 get random place from mongodb ignore user places  
 """
-@app.route('/getRandPlace')
-def getRandPlace():
+@app.route('/getRandPlace/<uuidUser>')
+def getRandPlace(uuidUser):
     places = collectionPlaces.find({'type': "place"})
     logging.debug("get /getRandPlace ")
     randPlaceIDs = random.randint(0,len(containerPlaces))
@@ -193,8 +212,8 @@ def getRandPlace():
 """
 get random place from mongodb ignore user places  
 """
-@app.route('/get3RandPlaces')
-def get3RandPlace():
+@app.route('/get3RandPlaces/<uuidUser>')
+def get3RandPlace(uuidUser):
     logging.debug("get /get3RandPlaces ")
     containerPlaces = mongo.db.places.find({'type': "place"})
     retList = []
@@ -208,7 +227,7 @@ def get3RandPlace():
 get random place from mongodb ignore user places  
 """
 @app.route('/getUserPlaces/<userId>')
-def get3RandPlace(userId):
+def getUserPlace(userId):
     logging.debug("get /getUserPlaces/ ")
     containerPlaces = mongo.db.places.find({'type': "place"})
     retList = []
@@ -231,14 +250,15 @@ def addUserProfile():
 """
 add new user to mongodb get uuid
 """
-@app.route('/addPlace/<uuid_user>', methods=['GET', 'POST'])
-def addPlace(username):
+@app.route('/addPlace', methods=['GET', 'POST'])
+def addPlace():
     content = request.get_json(silent=True)
     print(content)
     logging.debug("get /newUser/<username>")
     collectionPlaces.insert(content)    
-
-
+    user = content("userId")
+    userFound = collectionUsers.find_one_or_404({'userId': user})
+    oldPlaces = readIncommingJson()
 
 
 
