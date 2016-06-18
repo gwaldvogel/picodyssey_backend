@@ -1,0 +1,7 @@
+C:\git\hackathon216\picodyssey_backend\FlaskWebProject1\FlaskWebProject1\bin\Microsoft.PythonTools.WebRole.dll
+C:\git\hackathon216\picodyssey_backend\FlaskWebProject1\FlaskWebProject1\bin\AzureSetup.cfg
+C:\git\hackathon216\picodyssey_backend\FlaskWebProject1\FlaskWebProject1\bin\Microsoft.PythonTools.AzureSetup.exe
+C:\git\hackathon216\picodyssey_backend\FlaskWebProject1\FlaskWebProject1\bin\Microsoft.PythonTools.AzureSetup.exe.config
+C:\git\hackathon216\picodyssey_backend\FlaskWebProject1\FlaskWebProject1\bin\wfastcgi.py
+C:\git\hackathon216\picodyssey_backend\FlaskWebProject1\FlaskWebProject1\obj\Release\web.config
+C:\git\hackathon216\picodyssey_backend\FlaskWebProject1\FlaskWebProject1\obj\Release\web.debug.config

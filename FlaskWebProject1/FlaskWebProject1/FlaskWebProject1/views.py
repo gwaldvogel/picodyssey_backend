@@ -11,6 +11,8 @@ import random
 import numpy as np
 import json 
 import cv2
+import base64
+import os
 
 """
 project imports
@@ -36,7 +38,7 @@ configure logging
 """
 logging.basicConfig(filename='example.log', filemode='w',format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p',level=logging.DEBUG)
 logging.warning('!!! First Log !!!')
-
+defaultDir = os.curdir
 
 """
 class JSONEncoder(json.JSONEncoder):
@@ -216,18 +218,22 @@ def getPlaces():
     
 """
 get random place from mongodb ignore user places  
-
-@app.route('/get3RandPlaces/<uuidUser>')
-def get3RandPlace(uuidUser):
-    logging.debug("get /get3RandPlaces ")
-    containerPlaces = mongo.db.places.find({'type': "place"})
-    retList = []
-    i = 0
-    for i in range(0,3):
-        randPlaceIDs = random.randint(0,len(containerPlaces))
-        retList.append(containerPlaces(randPlaceIDs))
-    return jsonify(**retList) 
 """
+@app.route('/getRandPlace')
+def getRandPlaces():
+    logging.debug("getRandPlaces/")
+    containerPlaces = collectionPlaces.find({'type': "place"})
+    randPlaceIDs = random.randint(0,(collectionPlaces.find({'type': "place"}).count()))
+    tmpPlace = containerPlaces[randPlaceIDs]
+    tmpPlace.pop("_id")
+    os.chdir("C://data//uploads") 
+    tmpPath = tmpPlace.get("thumbnail")
+    imageStr = str(base64.b64encode(open(tmpPath, "rb").read()))
+    tmpPlace.update({"image": imageStr})
+    os.chdir(defaultDir)
+    return jsonify(**tmpPlace) 
+    
+
 """
 get random place from mongodb ignore user places  
 """
@@ -238,46 +244,63 @@ def getUserPlace(uuidUser):
     #allPlaces = user.get("places")
     tmpList = []
     for items in user:
-        tmpList.append(items.get("places"))
-    idList = tmpList[0].split(':')
+        if items.get("places") != "":
+            tmpList.append(items.get("places"))
+    if len(tmpList) > 1:
+        idList = tmpList[0].split(':')
+    else:
+        idList = tmpList[0]
     return jsonify({"userPlaces" : idList})
 
 """
 add new user to mongodb get uuid
 """
-@app.route('/addUser', methods=['GET', 'POST'])
+@app.route('/addUser', methods=['POST'])
 def addUserProfile():
     content = request.get_json(silent=True)
     print(content)
     logging.debug("get /newUser/<username>")
     collectionUsers.insert(content)
+    #return 'OK'
     
 """
 add new user to mongodb get uuid
 """
-@app.route('/addPlace', methods=['GET', 'POST'])
+@app.route('/addPlace', methods=['POST'])
 def addPlace():
     content = request.get_json(silent=True)
     print(content)
     logging.debug("get /newUser/<username>")
     collectionPlaces.insert(content)    
-    user = content("userId")
+    user = content.get("userId")
     userFound = collectionUsers.find_one_or_404({'userId': user})
+    tempNumOfPlaces = userFound.get("numberOfPlaces")
+    tempNumber = int(tempNumOfPlaces)
+    tempNumber += 1
+    userFound.pop("numberOfPlaces")
+    userFound.update({"numberOfPlaces" : str(tempNumber)})
 #    tmpList = []
 #    for items in userFound:
 #        tmpList.append(items.get("places"))   
     strPlaces = userFound.get("places")
-    idList = strPlaces.append(":"+str(content("placeId")))
+    tmp = content.get("placeId")
+    tmp2 = ":"+tmp
+    idList = str(strPlaces)+str(tmp2)
+
     #remove old user
-    collectionUsers.delete_one({'_id': userFound("_id")})  
-    userFound = {"places" : str(idList)}
-    print(userItem)
+    tmpId = userFound.get("userId")
+    collectionUsers.remove({'userId': str(tmpId)})  
+    userFound.pop("places")
+    userFound.update({"places" : str(idList)})
+    print(userFound)
     collectionUsers.insert(userFound)  
+    #return 'OK'
 
         
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
 
 @app.route('/uploadImage/<uuidPlace>', methods=['GET', 'POST'])
 def upload_file(uuidPlace):
@@ -298,10 +321,14 @@ def upload_file(uuidPlace):
             tmpPath = resizeImage(uuidPlace,str(app.config['UPLOAD_FOLDER'])+filename)
             #update place thumbnail
             placeFound = collectionPlaces.find_one_or_404({'placeId': uuidPlace})
-            placeFound = {"thumbnail" : str(tmpPath)}
-            collectionPlaces.delete_one({'_id': placeFound("_id")})  
+            placeFound.update({"thumbnail" : str(tmpPath)})
+            """
+            tmpId = placeFound.get("_id")
+            collectionPlaces.remove({'_id': str(tmpId)})  
             collectionPlaces.insert(placeFound)
-            userFound = {"places" : str(idList)}
+            userFound.update({"places" : str(idList)})
             print(userItem)
             collectionUsers.insert(userFound)  
+            """
+            #return 'OK'
           

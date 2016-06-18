@@ -9,7 +9,7 @@ import platform
 
 if platform.system == "Windows":
     PROCESSING_FOLDER = 'C://data//imagesBig'
-    UPLOAD_FOLDER = 'C://data//images'
+    UPLOAD_FOLDER = 'C://data//uploads'
 elif platform.system == "Linux":
     PROCESSING_FOLDER = 'C://data//imagesBig'
     UPLOAD_FOLDER = '/home/ubuntu/data/images'

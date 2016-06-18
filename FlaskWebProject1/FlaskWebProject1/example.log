@@ -1,5 +1,23 @@
-06/18/2016 06:15:24 PM !!! First Log !!!
-06/18/2016 06:15:25 PM  * Running on http://localhost:53455/ (Press CTRL+C to quit)
-06/18/2016 06:15:25 PM 127.0.0.1 - - [18/Jun/2016 18:15:25] "GET / HTTP/1.1" 200 -
-06/18/2016 06:15:25 PM 127.0.0.1 - - [18/Jun/2016 18:15:25] "GET /favicon.ico HTTP/1.1" 404 -
-06/18/2016 06:15:25 PM 127.0.0.1 - - [18/Jun/2016 18:15:25] "GET /favicon.ico HTTP/1.1" 404 -
+06/18/2016 11:00:03 PM !!! First Log !!!
+06/18/2016 11:00:03 PM  * Running on http://192.168.0.104:80/ (Press CTRL+C to quit)
+06/18/2016 11:00:09 PM get /getUserPlaces/
+06/18/2016 11:00:09 PM Exception on /getUserPlaces/3597 [GET]
+Traceback (most recent call last):
+  File "C:\Anaconda3\lib\site-packages\flask\app.py", line 1988, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Anaconda3\lib\site-packages\flask\app.py", line 1641, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Anaconda3\lib\site-packages\flask\app.py", line 1544, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\Anaconda3\lib\site-packages\flask\_compat.py", line 33, in reraise
+    raise value
+  File "C:\Anaconda3\lib\site-packages\flask\app.py", line 1639, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Anaconda3\lib\site-packages\flask\app.py", line 1625, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\git\hackathon216\picodyssey_backend\FlaskWebProject1\FlaskWebProject1\FlaskWebProject1\views.py", line 251, in getUserPlace
+    return jsonify({"userPlaces" : idList})
+UnboundLocalError: local variable 'idList' referenced before assignment
+06/18/2016 11:00:09 PM 192.168.0.104 - - [18/Jun/2016 23:00:09] "GET /getUserPlaces/3597 HTTP/1.1" 500 -
+06/18/2016 11:00:45 PM getRandPlaces/
+06/18/2016 11:00:45 PM 192.168.0.121 - - [18/Jun/2016 23:00:45] "GET /getRandPlace HTTP/1.1" 200 -
