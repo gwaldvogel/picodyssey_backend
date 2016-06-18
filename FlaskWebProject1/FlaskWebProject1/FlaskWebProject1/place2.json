@@ -8,7 +8,7 @@
    "image": "hello.jpg",
    "thumbnail": "hello_thumbnail.jpg",
    "rate": "4.5",
-   "numOfRates": "20",
+   "numberOfRates": "20",
    "description": "Rathaus freiburg",
    "city": "Freiburg",
    "type" : "place"

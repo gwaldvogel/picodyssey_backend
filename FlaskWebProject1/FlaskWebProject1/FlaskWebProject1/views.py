@@ -16,7 +16,7 @@ import cv2
 project imports
 """
 from FlaskWebProject1 import app,collectionUsers,collectionPlaces,db
-#from FlaskWebProject1 import dbHelper
+
 
 
 """
@@ -110,15 +110,16 @@ thumbnail creation
 
 
 def resizeImage(placeId,filename):
-	image = cv2.imread(str(filename))
-	#calc the ratio
-	r = 250.0 / image.shape[1]
-	dim = (250, int(image.shape[0] * r))
-	 
-	# perform the actual resizing of the image
-	resized = cv2.resize(image, dim, interpolation = cv2.INTER_AREA)
-	
-	cv2.imwrite(str(placeId)+"_thumbnail.jpg", resized)
+        image = cv2.imread(str(filename))
+        #calc the ratio
+        r = 250.0 / image.shape[1]
+        dim = (250, int(image.shape[0] * r))
+         
+        # perform the actual resizing of the image
+        resized = cv2.resize(image, dim, interpolation = cv2.INTER_AREA)
+        
+        cv2.imwrite(str(placeId)+"_thumbnail.jpg", resized)
+        return str(placeId)+"_thumbnail.jpg"
 
 
 """
@@ -129,7 +130,7 @@ default sites for mongodb
 def home():
     """Renders the home page.""" 
     #test script for read ref json format
-    """
+    
     collect = db.collection_names(include_system_collections=False)
     Data = json.loads(open("C://git//hackathon216//picodyssey_backend//FlaskWebProject1//FlaskWebProject1//FlaskWebProject1//place.json").read())
     print (json.dumps(Data,indent=4, sort_keys=True))
@@ -148,7 +149,7 @@ def home():
 
     collectionUsers.insert(incommingUser)
     collectionPlaces.insert(incommingData)
-    """
+    
     return render_template('Hello.html')
 
 """
@@ -200,18 +201,22 @@ def getPlaceByUuid(uuid_place):
 """
 get random place from mongodb ignore user places  
 """
-@app.route('/getRandPlace/<uuidUser>')
-def getRandPlace(uuidUser):
+@app.route('/getPlaces')
+def getPlaces():
     places = collectionPlaces.find({'type': "place"})
     logging.debug("get /getRandPlace ")
-    randPlaceIDs = random.randint(0,len(containerPlaces))
-    retPlaces = places(randPlaceIDs)
-    retPlaces.pop("_id")
-    return jsonify(**retPlaces)
+#    retList = {}
+#    for index,place in enumerate(places):
+#        retList.update({str(index):(place.get("placeId"))}) 
+#   return jsonify(**retList)
+    retList = []
+    for place in places:
+        retList.append(place.get("placeId")) 
+    return jsonify({"allPlaces" : retList})
     
 """
 get random place from mongodb ignore user places  
-"""
+
 @app.route('/get3RandPlaces/<uuidUser>')
 def get3RandPlace(uuidUser):
     logging.debug("get /get3RandPlaces ")
@@ -222,20 +227,20 @@ def get3RandPlace(uuidUser):
         randPlaceIDs = random.randint(0,len(containerPlaces))
         retList.append(containerPlaces(randPlaceIDs))
     return jsonify(**retList) 
-
+"""
 """
 get random place from mongodb ignore user places  
 """
-@app.route('/getUserPlaces/<userId>')
-def getUserPlace(userId):
-    logging.debug("get /getUserPlaces/ ")
-    containerPlaces = mongo.db.places.find({'type': "place"})
-    retList = []
-    i = 0
-    for i in range(0,3):
-        randPlaceIDs = random.randint(0,len(containerPlaces))
-        retList.append(containerPlaces(randPlaceIDs))
-    return jsonify(**retList)
+@app.route('/getUserPlaces/<uuidUser>')
+def getUserPlace(uuidUser):
+    logging.debug("get /getUserPlaces/")
+    user = collectionUsers.find({"userId":str(uuidUser)})
+    #allPlaces = user.get("places")
+    tmpList = []
+    for items in user:
+        tmpList.append(items.get("places"))
+    idList = tmpList[0].split(':')
+    return jsonify({"userPlaces" : idList})
 
 """
 add new user to mongodb get uuid
@@ -258,17 +263,45 @@ def addPlace():
     collectionPlaces.insert(content)    
     user = content("userId")
     userFound = collectionUsers.find_one_or_404({'userId': user})
-    oldPlaces = readIncommingJson()
+#    tmpList = []
+#    for items in userFound:
+#        tmpList.append(items.get("places"))   
+    strPlaces = userFound.get("places")
+    idList = strPlaces.append(":"+str(content("placeId")))
+    #remove old user
+    collectionUsers.delete_one({'_id': userFound("_id")})  
+    userFound = {"places" : str(idList)}
+    print(userItem)
+    collectionUsers.insert(userFound)  
 
-
-
-
+        
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
-
-@app.route('/uploads/<filename>')
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'],
-                               filename)
+@app.route('/uploadImage/<uuidPlace>', methods=['GET', 'POST'])
+def upload_file(uuidPlace):
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            #logging.info('upload_file: no file detect')
+            return redirect(request.url)
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit a empty part without filename
+        if file.filename == '':
+            #logging.info('upload_file: no file detect')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            tmpPath = resizeImage(uuidPlace,str(app.config['UPLOAD_FOLDER'])+filename)
+            #update place thumbnail
+            placeFound = collectionPlaces.find_one_or_404({'placeId': uuidPlace})
+            placeFound = {"thumbnail" : str(tmpPath)}
+            collectionPlaces.delete_one({'_id': placeFound("_id")})  
+            collectionPlaces.insert(placeFound)
+            userFound = {"places" : str(idList)}
+            print(userItem)
+            collectionUsers.insert(userFound)  
+          

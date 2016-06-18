@@ -8,7 +8,7 @@
    "image": "string",
    "thumbnail": "string",
    "rate": "float",
-   "numOfRates": "int",
+   "numberOfRates": "int",
    "description": "string",
    "city": "string",
    "type" : "place"
