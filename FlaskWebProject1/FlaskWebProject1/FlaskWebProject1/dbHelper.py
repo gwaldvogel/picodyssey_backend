@@ -3,7 +3,6 @@ import other modules
 """
 import numpy as np
 
-
 """
 imports function
 """
@@ -55,6 +54,8 @@ def convertDataType(value,refValue):
         return str(value)
     if refValue == "int":
         return int(value)
+    if refValue == "uint":
+        return np.uint64(value)
     if refValue == "long": 
         return np.long(value)
     if refValue == "float":
@@ -66,7 +67,7 @@ def convertDataType(value,refValue):
     if refValue == "date":
         return str(value)
     else:
-        #logging.warning('convertDataType: can not decode input value')  
+        logging.warning('convertDataType: can not decode input value')  
         return 0
 
 def recReadJsonList(valueList,refList):
@@ -86,7 +87,7 @@ def readIncommingJson(file,refFile):
             if file[keys] == list:
                 recReadJsonList(file[keys],refFile[keys])
             retDict[keys] = convertDataType(file[keys],refFile[keys])
-        #logging.info('readIncommingJson: decoce user json')
+        logging.info('readIncommingJson: decoce user json')
         return retDict
           
     if (file["type"] == "place") & (refFile["type"] == "place"):
@@ -96,11 +97,11 @@ def readIncommingJson(file,refFile):
                 tmpList = refFile[keys]
                 retDict[keys] = recReadJsonList(file[keys],tmpList)
             retDict[keys] = convertDataType(file[keys],refFile[keys])
-        #logging.info('readIncommingJson: decoce place json')
+        logging.info('readIncommingJson: decoce place json')
         return retDict
         
     else:
-        #logging.warning('readIncommingJson: can not decode input json file')  
+        logging.warning('readIncommingJson: can not decode input json file')  
         return -1       
 
 
@@ -116,9 +117,10 @@ def readIncommingJson(file,refFile):
 
 
 class user():
-    def __init__(self,refJson):
+    def __init__(self,refJson,inComeData):
         self._userRefJson = refJson
-        self._userData = {}
+        self.checkElement(inComeData)
+        self._userData = readIncommingJson(inComeData)
 
     def getObjectAsBSON(self):
         if readIncommingJson(self._userData,self._userRefJson) != -1 :
@@ -139,19 +141,33 @@ class user():
         try:
             decodeData = json.dumps(element, ensure_ascii=False)
             failure = False
-            
         except:
             failure = True
         return failure
 
     def addpendPlace(self,object):
+        #get old data from db
+        oldPlaces = self._userData["places"]
+        oldNumOfPlaces = self._userData["numOfPlaces"]
+        oldPlaces.append(object["user_id"])
+        oldNumOfPlaces += 1
+        #update the db oject
+        self._userData["places"] = oldPlaces
+        self._userData["numOfPlaces"] = oldNumOfPlaces
+
+    def safeObject(self):
+        #remove old object
+        mongo.db.users.remove(self._userData["user_id"])
+        mongo.db.users.insert(self.getObjectAsBSON(self._userData))
+
 
 
 
 class place():
-    def __init__(self,refJson):
+    def __init__(self,refJson,inComeData):
         self._placeRefJson = refJson
-        self._placeData = {}
+        self.checkElement(inComeData)
+        self._userData = readIncommingJson(inComeData)
 
     def getObjectAsBSON(self):
         if readIncommingJson(self._placeData,self._placeRefJson) != -1 :
@@ -171,8 +187,7 @@ class place():
         failure = True
         try:
             decodeData = json.dumps(element, ensure_ascii=False)
-            failure = False
-            
+            failure = False 
         except:
             failure = True
         return failure

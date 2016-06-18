@@ -5,8 +5,8 @@ The flask application package.
 from flask import Flask
 from flask_pymongo import PyMongo
 
-
 import platform
+
 if platform.system == "Windows":
     PROCESSING_FOLDER = 'C://data//imagesBig'
     UPLOAD_FOLDER = 'C://data//images'
